@@ -4,8 +4,7 @@
 #include <vector>
 
 class subjects{
-
-        private:
+	private:
                 coords h;
                 std::vector<position> a;
         public:

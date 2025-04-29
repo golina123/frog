@@ -3,6 +3,7 @@
 #include <iostream>
 #include "frog_view.h"
 #include "frog_model.h"
+#include "frog_terminal.h"
 #include <termios.h>
 #include <unistd.h>
 using namespace std;
@@ -10,13 +11,11 @@ using namespace std;
 int main(int ac, const char *av[])
 {
 	model game_model;
-        frog_view *view = frog_view::getview(av[1]); //draw
-	struct termios oldt, newt;
-    	tcgetattr(1, &oldt);
-   	newt = oldt;
-    	newt.c_lflag &= ~(ICANON | ECHO);
-    	tcsetattr(1, TCSANOW, &newt);
-	
+        frog_view *view = frog_view::getview(ac > 1 ? av[1] : ""); //draw
+	Terminal terminal;
+    	terminal.enable();
+
+	cout<< "Game start \n";
 	while(true)
        	{
                                    // Обработка ввода
@@ -40,9 +39,7 @@ int main(int ac, const char *av[])
     	}
 
 	exit_loop:
-                                       // Восстановление и очистка
-   	tcsetattr(1, TCSANOW, &oldt);
-    	delete view;
+              
     	cout<< " hello i'm frog from main \n";
     	return 0;
 }

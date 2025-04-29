@@ -11,6 +11,7 @@ using coords = std::pair<int, int>;
 enum objects {
 
         tree,
+	water,
         empty
 };
 

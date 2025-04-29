@@ -18,6 +18,7 @@ void model::process_action(Action action) {
 	case TREE: 
 			 {
 				 move_player(1, 1); 
+				 plant_tree(-1, -1);
 				 break;
 			 }
 	default: break;
@@ -27,11 +28,11 @@ void model::process_action(Action action) {
 void model::rebuild() 
 {
      objects.clear();
-    
-    // 2. Пересоздаем начальное состояние
+     trees.clear();
+                                       // Пересоздаем начальное состояние
     objects = world_objects.get_a();
     
-    // 3. Сбрасываем позицию игрока
+                                        // Сбрасываем позицию игрока
     if (!objects.empty()) {
         player_pos_ = objects[0].get_pos();
     } else {
@@ -47,8 +48,18 @@ void model::move_player(int dx, int dy)
    
 }
 
+void model::plant_tree(int dx, int dy)
+{
+	coords new_pos = {player_pos_.first + dx,  player_pos_.second + dy};
+	trees.emplace_back(new_pos, objects::tree);
+
+}
 const std::vector<position>& model::get_objects() const {
     return objects;
+}
+
+const std::vector<position>& model::get_trees() const {
+    return trees; 
 }
 coords model::get_player_pos() const {
     return player_pos_;

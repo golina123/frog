@@ -17,9 +17,9 @@ frog_tview::frog_tview() //screen size
         ioctl(1, TIOCGWINSZ, &c);
         screen_y = c.ws_row;
         screen_x = c.ws_col;
-	setup_terminal();
-
 }
+
+frog_tview::~frog_tview() = default;
 
 void frog_tview::clscr() //cleaning screen
 {
@@ -29,6 +29,8 @@ void frog_tview::clscr() //cleaning screen
 
 void frog_tview::cursor(int x, int y) //move cursor in the point
 {
+	x = std::max(1, std::min(x, screen_x));
+        y = std::max(1, std::min(y, screen_y));
 	cout << "\033[" << y << ";" << x << "H";
         std::flush(std::cout);
 }
@@ -44,34 +46,22 @@ void frog_tview::get_color(enum colors c) //change color
 void frog_tview::draw(const model& m) {
     clscr();
     
-    // Отрисовка игрока
+    // draw player
     auto pos = m.get_player_pos();
     cursor(pos.first, pos.second);
     get_color(red);
     std::cout << "P";
-    std::cout.flush();
-
-     for(const auto& obj : m.get_objects()) {
-        cursor(obj.get_pos().first, obj.get_pos().second);
+    
+    for(const auto& tree : m.get_trees()) {
+        cursor(tree.get_pos().first, tree.get_pos().second);
         get_color(green);
         std::cout << "T";
     }
-}
-// Реализация setup_terminal()
-void frog_tview::setup_terminal() {
-    tcgetattr(1, &oldt_);
-    struct termios newt = oldt_;
-    newt = oldt_;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(1, TCSANOW, &newt);
-}
+     for(const auto& obj : m.get_objects()) {
+        cursor(obj.get_pos().first, obj.get_pos().second);
+        get_color(yellow);
+        std::cout << "U";
+    }
+    std::cout.flush();
 
-// Реализация restore_terminal()
-void frog_tview::restore_terminal() {
-    tcsetattr(1, TCSANOW, &oldt_);
-}
-
-// Реализация деструктора
-frog_tview::~frog_tview() {
-    restore_terminal();
 }

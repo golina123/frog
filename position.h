@@ -12,7 +12,8 @@ enum objects {
 
         tree,
 	water,
-        empty
+        empty, 
+	swamp
 };
 
 class position{

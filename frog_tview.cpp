@@ -48,6 +48,9 @@ void frog_tview::draw(const model& m) {
     
     // draw player
     auto pos = m.get_player_pos();
+    pos.first = std::max(1, std::min(pos.first, screen_x));
+    pos.second = std::max(1, std::min(pos.second, screen_y));
+
     cursor(pos.first, pos.second);
     get_color(red);
     std::cout << "P";
@@ -57,6 +60,13 @@ void frog_tview::draw(const model& m) {
         get_color(green);
         std::cout << "T";
     }
+
+    for(const auto& s : m.get_swamp()) {
+        cursor(s.get_pos().first, s.get_pos().second);
+        get_color(blue);
+        std::cout << "#";
+    }
+
      for(const auto& obj : m.get_objects()) {
         cursor(obj.get_pos().first, obj.get_pos().second);
         get_color(yellow);
